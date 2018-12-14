@@ -1,0 +1,128 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+
+    <style type="text/css">
+        #overall {
+            background-color: #ccc;
+            padding: 50px 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="main container">
+
+        <div id="overall" class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+
+            <h3>Grade Calculator</h3>
+
+            <div id="subjects">
+                
+            </div>
+
+            <button id="add-button" class="btn btn-small btn-primary">Add</button>
+        </div>
+
+    </div>
+
+
+    <script type="text/javascript">
+        function gradeScore(X) {
+            if (X >= 70) {
+                return ('A');
+            } else if (X >= 60 && X <= 69) {
+                return ('B');
+            } else if (X >= 50 && X <= 59) {
+                return ('C');
+            } else if (X >= 40 && X <= 49) {
+                return ('D');
+            } else if (X < 40) {
+                return ('F');
+            }
+        }
+
+        $(document).ready((e) => {
+            let gradesRow = -1;
+
+            function getGradesRow(className) {
+                const classNames = className.split(" ");
+                const gradeClass = classNames[classNames.length - 1];
+                const gradeRowClass = gradeClass.split("-"); 
+                const gradeRow = gradeRowClass[gradeRowClass.length - 1];
+                return gradeRow;
+            }
+
+            $('#add-button').click((e) => {
+                gradesRow++;
+
+                let row = document.createElement("div");
+                row.className = "row row-"+gradesRow;
+
+                let inputGroup = document.createElement('div');
+                inputGroup.className = "input-group";
+                
+                let inputGroupPrepend = document.createElement('div');
+                inputGroupPrepend.className = "input-group-prepend";
+
+                let inputGroupAppend = document.createElement('div');
+                inputGroupAppend.className = "input-group-append";
+                
+
+                let gradeInput = document.createElement('input');
+                gradeInput.setAttribute("type", "number");
+                gradeInput.setAttribute("min", "1");
+                gradeInput.setAttribute("max", "100");
+                gradeInput.className = "form-control grades-row-"+gradesRow;
+
+                gradeInput.onkeyup = function (e) {
+                    const score = e.target.value;
+                    const gradeRow = getGradesRow(e.target.className);
+                    $(".result-grades-row-"+gradeRow).text(gradeScore(score));
+                }
+
+                let removeBtn = document.createElement("button");
+                removeBtn.className = "btn btn-small btn-danger grades-row-"+gradesRow;
+                removeBtn.textContent = "Remove";
+
+                removeBtn.onclick = (e) => {
+                    const gradeRow = getGradesRow(e.target.className);
+                    const row = document.getElementsByClassName("row-"+gradeRow)[0];
+                    
+                    document.getElementById('subjects').removeChild(row);
+                }
+
+                inputGroupAppend.append(removeBtn);
+
+                let resultSpan = document.createElement("span");
+                resultSpan.className = "input-group-text result-grades-row-"+gradesRow;
+                resultSpan.textContent = "No Grade"; 
+
+                inputGroupPrepend.append(resultSpan)
+                
+                inputGroup.append(inputGroupAppend);
+                inputGroup.append(gradeInput);
+                inputGroup.append(inputGroupPrepend);
+
+                row.appendChild(inputGroup);
+
+                $('#subjects').append(row);
+            });
+        });
+    </script>
+</body>
+
+</html>	
